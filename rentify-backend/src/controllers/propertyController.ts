@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
 import Property from '../models/Property';
 import User from '../models/User';
 import { createTransportService } from '../utils/mail';
 
-const getProperties = async (req: Request, res: Response) => {
+const getProperties = async (req: any, res: any) => {
     try {
         const { page = 1, limit = 12, place, bedrooms, bathrooms } = req.query;
 
@@ -29,7 +28,7 @@ const getProperties = async (req: Request, res: Response) => {
     }
 };
 
-const getPropertiesBySeller = async (req: Request, res: Response) => {
+const getPropertiesBySeller = async (req: any, res: any) => {
     try {
         const { sellerId } = req.params;
         const { page = 1, limit = 12, place, bedrooms, bathrooms } = req.query;
@@ -56,12 +55,12 @@ const getPropertiesBySeller = async (req: Request, res: Response) => {
     }
 };
 
-const getPropertiesByID = async (req: Request, res: Response) => {
+const getPropertiesByID = async (req: any, res: any) => {
     const property = await Property.findById(req.params.id);
     res.json(property);
 };
 
-const createProperty = async (req: any, res: Response) => {
+const createProperty = async (req: any, res: any) => {
     const { place, area, bedrooms, bathrooms, nearbyAmenities } = req.body;
 
     const property = new Property({
@@ -77,7 +76,7 @@ const createProperty = async (req: any, res: Response) => {
     res.status(201).json(createdProperty);
 };
 
-const updateProperty = async (req: Request, res: Response) => {
+const updateProperty = async (req: any, res: any) => {
     const { place, area, bedrooms, bathrooms, nearbyAmenities } = req.body;
 
 
@@ -97,7 +96,7 @@ const updateProperty = async (req: Request, res: Response) => {
     }
 };
 
-const deleteProperty = async (req: Request, res: Response) => {
+const deleteProperty = async (req: any, res: any) => {
     const property = await Property.findById(req.params.id);
 
     if (property) {
@@ -108,7 +107,7 @@ const deleteProperty = async (req: Request, res: Response) => {
     }
 };
 
-const expressInterest = async (req: any, res: Response) => {
+const expressInterest = async (req: any, res: any) => {
     try {
         const property = await Property.findById(req.params.id);
         const buyer = req.user;
@@ -144,7 +143,7 @@ const expressInterest = async (req: any, res: Response) => {
     }
 };
 
-const likeProperty = async (req: any, res: Response) => {
+const likeProperty = async (req: any, res: any) => {
     try {
         const { id } = req.params;
         const userId = req.user._id;

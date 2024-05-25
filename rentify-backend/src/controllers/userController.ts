@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
 import User from '../models/User';
 import generateToken from '../utils/generateToken';
 import { createTransportService } from '../utils/mail';
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (req: any, res: any) => {
   const { firstName, lastName, email, phone, password, isSeller } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -44,7 +43,7 @@ const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req: any, res: any) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -65,7 +64,7 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-const getUserProfile = async (req: any, res: Response) => {
+const getUserProfile = async (req: any, res: any) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
