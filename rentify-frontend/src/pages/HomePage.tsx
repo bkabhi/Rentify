@@ -24,6 +24,7 @@ const HomePage: React.FC = () => {
 
     useEffect(() => {
         fetchUserProperties();
+        // eslint-disable-next-line
     }, [user, filters, page]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
