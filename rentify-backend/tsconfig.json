@@ -7,9 +7,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "@common-models/*" :["../common-models/src/*"]
-    }
+    "paths": { }
   },
   "references": [],
   "lib": ["es2015"]
