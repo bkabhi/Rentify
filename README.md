@@ -37,13 +37,13 @@ Rentify is a web application designed to help owners find the correct tenants an
 ### Part III: Bonus Points (Optional)
 
 - The application is deployed on cloud platforms:
-  - **Frontend**: Deployed on Netlify.
   - **Backend**: Deployed on Render.
+  - **Frontend**: Deployed on Netlify.
 
 ## Tech Stack
 
-- **Frontend**: React, Material-UI, Netlify
 - **Backend**: Node.js, Express, MongoDB, Render
+- **Frontend**: React, Material-UI, Netlify
 
 ## Installation and Setup Instructions
 
