@@ -78,7 +78,7 @@ SMTP_PASS=your_smtp_password
 4. Run the server:
 
 ```bash
-npm start
+npm run dev
 ```
 
 #### Backend Routes
