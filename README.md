@@ -1,153 +1,274 @@
+## README
+
 # Rentify - Where Renting Meets Simplicity
 
-Rentify is a web application designed to help property owners find the right tenants and assist tenants in finding the perfect rental property based on their key requirements.
+Rentify is a web application designed to help owners find the correct tenants and also help tenants find the correct house based on their key requirements. This project is built using the MERN stack (MongoDB, Express, React, Node.js).
 
-## Table of Contents
+## Online Deployment Links
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Deployment](#deployment)
-- [License](#license)
+- **Frontend**: [Rentify Frontend on Netlify](https://rentify-frontend-bkabhi.netlify.app)
+- **Backend**: [Rentify Backend on Render](https://rentify-backend-bkabhi.onrender.com)
 
 ## Features
 
-### Basic Application (Mandatory)
+### Part I: Basic Application (Mandatory)
 
-- User Registration and Login
-- Seller Flow:
-  - Post property details
-  - View, update, and delete properties
-- Buyer Flow:
-  - View all posted rental properties
-  - Express interest in properties
-  - Apply filters to search properties
+- **User Registration**: Users can register as either a seller or a buyer.
+  - Fields: First Name, Last Name, Email, Phone Number, Password, isSeller
+- **Seller Flow**:
+  - Post Property: Sellers can post their properties by providing details such as place, area, number of bedrooms, bathrooms, nearby amenities, etc.
+  - View Properties: Sellers can view the properties they have posted.
+  - Update/Delete Properties: Sellers can update or delete their properties.
+- **Buyer Flow**:
+  - View Properties: Buyers can view all the posted rental properties.
+  - Interested Button: Buyers can click the "I'm Interested" button on a property to view seller details.
+  - Apply Filters: Buyers can apply filters based on property details.
 
-### Add-On Features (Advanced)
+### Part II: Add-On Features (Advanced)
 
-- Pagination
-- Form validation
-- Mandate login for viewing seller details
-- Like button for properties
-- Email notifications for interested buyers and sellers
+- **Pagination**: Implemented pagination for properties.
+- **Form Validation**: Proper form validation is handled on the frontend.
+- **Login Requirement**: Buyers must be logged in to view seller details. Unauthorized users are redirected to the login screen.
+- **Like Button**: Buyers can like properties, and the like count is tracked live.
+- **Email Notifications**:
+  - When a buyer clicks the "I'm Interested" button, the seller's contact details are sent to the buyer via email.
+  - The seller receives an email with the interested buyer's details.
 
-### Bonus Section
+### Part III: Bonus Points (Optional)
 
-- Deployed on AWS
+- The application is deployed on cloud platforms:
+  - **Frontend**: Deployed on Netlify.
+  - **Backend**: Deployed on Render.
 
 ## Tech Stack
 
-### Frontend
+- **Frontend**: React, Material-UI, Netlify
+- **Backend**: Node.js, Express, MongoDB, Render
 
-- React
-- Material-UI
+## Installation and Setup Instructions
 
 ### Backend
 
-- Node.js
-- Express
-- MongoDB
+1. Clone the repository:
 
-## Installation
+```bash
+git clone https://github.com/bkabhi/Rentify.git
+cd rentify-backend
+```
 
-### Prerequisites
+2. Install dependencies:
 
-- Node.js
-- MongoDB
+```bash
+npm install
+```
 
-### Backend Setup
+3. Create a `.env` file and add the following environment variables:
+
+```plaintext
+MONGO_URI=your_mongodb_connection_string
+PORT=your_port
+JWT_SECRET=your_jwt_secret
+
+SMTP_HOST=your_smtp_host
+SMTP_PORT=your_smtp_port
+SMTP_USER=your_smtp_user
+SMTP_PASS=your_smtp_password
+```
+
+4. Run the server:
+
+```bash
+npm start
+```
+
+#### Backend Routes
+
+- **User Routes**
+
+  - **Register User**
+
+    ```http
+    POST /api/users/
+    ```
+
+    Request body:
+    ```json
+    {
+      "firstName": "Abhijeet",
+      "lastName": "Sagar",
+      "email": "bloggerbkabhi@gmail.com",
+      "phone": "8789502522",
+      "password": "Password123!$",
+      "isSeller": true
+    }
+    ```
+
+  - **Login User**
+
+    ```http
+    POST /api/users/login
+    ```
+
+    Request body:
+    ```json
+    {
+      "email": "bloggerbkabhi@gmail.com",
+      "password": "Password123!$"
+    }
+    ```
+
+  - **Get User Profile**
+
+    ```http
+    GET /api/users/profile
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+- **Property Routes**
+
+  - **Get All Properties**
+
+    ```http
+    GET /api/properties/
+    ```
+
+  - **Create Property**
+
+    ```http
+    POST /api/properties/
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+    Request body:
+    ```json
+    {
+      "place": "New delhi",
+      "area": "1200",
+      "bedrooms": "3",
+      "bathrooms": "2",
+      "nearbyAmenities": "Shadipur"
+    }
+    ```
+
+  - **Get Property by ID**
+
+    ```http
+    GET /api/properties/:id
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+  - **Update Property**
+
+    ```http
+    PUT /api/properties/:id
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+    Request body:
+    ```json
+    {
+      "place": "New delhi",
+      "area": "1500",
+      "bedrooms": "4",
+      "bathrooms": "3",
+      "nearbyAmenities": "Shadipur metro station"
+    }
+    ```
+
+  - **Delete Property**
+
+    ```http
+    DELETE /api/properties/:id
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+  - **Express Interest in Property**
+
+    ```http
+    POST /api/properties/:id/interest
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+  - **Get Properties by Seller**
+
+    ```http
+    GET /api/properties/seller/:sellerId
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+  - **Like Property**
+
+    ```http
+    POST /api/properties/like/:id
+    ```
+
+    Header:
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+### Frontend
 
 1. Clone the repository:
-   ```sh
-   git clone https://github.com/yourusername/rentify.git
-   cd rentify/backend
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Set environment variables:
-   ```sh
-   export MONGODB_URI="your_mongodb_uri"
-   export JWT_SECRET="your_jwt_secret"
-   ```
-4. Start the backend server:
-   ```sh
-   npm start
-   ```
 
-### Frontend Setup
+```bash
+git clone https://github.com/bkabhi/Rentify.git
+cd rentify-frontend
+```
 
-1. Navigate to the frontend directory:
-   ```sh
-   cd rentify/frontend
-   ```
 2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Build the frontend:
-   ```sh
-   npm run build
-   ```
+
+```bash
+npm install
+```
+
+3. Create a `.env` file and add the following environment variables:
+
+```plaintext
+REACT_APP_API_URL=https://rentify-backend-bkabhi.onrender.com
+```
+
+4. Run the application:
+
+```bash
+npm start
+```
 
 ## Usage
 
-1. Navigate to the frontend build directory and serve the static files using a web server of your choice.
-2. Access the application in your web browser at the configured domain.
+1. Open the application in your browser.
+2. Register as a new user.
+3. If you registered as a seller, you can post new properties, view, update, or delete your properties.
+4. If you registered as a buyer, you can view all properties, apply filters, like properties, and view seller details by clicking the "I'm Interested" button.
 
-## API Endpoints
+## Contact
 
-### User Authentication
-
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login a user
-
-### Properties
-
-- `GET /api/properties` - Get all properties with pagination and filtering
-- `GET /api/properties/seller/:sellerId` - Get properties by seller with pagination and filtering
-- `POST /api/properties` - Create a new property
-- `PUT /api/properties/:id` - Update a property
-- `DELETE /api/properties/:id` - Delete a property
-- `POST /api/properties/:id/like` - Like a property
-
-## Deployment
-
-### AWS Deployment
-
-The Rentify application is deployed on AWS. You can access it via the following link:
-
-[Rentify - Deployed Application](http://your-aws-deployed-app-url.com)
-
-### Steps to Deploy on AWS
-
-1. **Frontend Deployment on S3**
-
-   - Build the frontend using `npm run build`.
-   - Upload the build files to an S3 bucket configured for static website hosting.
-   - Ensure the S3 bucket policy allows public read access.
-
-2. **Backend Deployment on EC2**
-
-   - Launch an EC2 instance and SSH into it.
-   - Install Node.js and MongoDB.
-   - Clone the repository and navigate to the backend directory.
-   - Install dependencies and set environment variables.
-   - Start the backend server.
-   - Optionally, set up a reverse proxy using Nginx.
-
-3. **Database Setup**
-
-   - Create a MongoDB instance on Amazon RDS or use an existing MongoDB service.
-   - Update the backend environment variables to point to the MongoDB instance.
-
-4. **Domain and SSL**
-   - Use Amazon Route 53 to manage your domain.
-   - Set up SSL using AWS Certificate Manager.
-
-## License
-
-This project is licensed under the MIT License.
+If you have any questions, feel free to contact me at bloggerbkabhi@gmail.com.
