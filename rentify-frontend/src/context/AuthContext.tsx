@@ -5,7 +5,7 @@ import { IUser } from '../models';
 
 interface AuthContextProps {
     user: IUser | null;
-    // token: string | null;
+    loading: boolean;
     login: (token: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
@@ -14,7 +14,7 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({
     user: null,
-    // token: null,
+    loading: false,
     login: () => { },
     logout: () => { },
     isAuthenticated: false,
@@ -23,15 +23,19 @@ const AuthContext = createContext<AuthContextProps>({
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<IUser | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
 
     const fetchUser = async () => {
         try {
+            setLoading(true);
             const user = await getUser()
             setUser(user);
         } catch (error) {
             console.error('Failed to fetch user data:', error);
             setUser(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -53,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, fetchUser }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, fetchUser, loading }}>
             {children}
         </AuthContext.Provider>
     );

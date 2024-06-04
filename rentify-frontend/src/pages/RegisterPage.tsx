@@ -1,57 +1,68 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box, FormControlLabel, Checkbox } from '@mui/material';
+import { Container, TextField, Button, Typography, Box, FormControlLabel, Checkbox, CircularProgress, InputAdornment, IconButton } from '@mui/material';
 import { registerUser } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const RegisterPage: React.FC = () => {
     const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '', isSeller: false });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const validateForm = () => {
-        const errors: { [key: string]: string } = {};
+    const validateForm = (name: string, value: string) => {
+        const newErrors = { ...errors };
 
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!formData.email.match(emailRegex)) {
-            errors.email = 'Please enter a valid email address';
+        switch (name) {
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                newErrors.email = !value.match(emailRegex) ? 'Please enter a valid email address' : '';
+                break;
+            case 'phone':
+                const phoneRegex = /^\d{10}$/;
+                newErrors.phone = !value.match(phoneRegex) ? 'Please enter a 10-digit phone number' : '';
+                break;
+            case 'password':
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+                newErrors.password = !value.match(passwordRegex)
+                    ? 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+                    : '';
+                break;
+            default:
+                break;
         }
 
-        // Validate phone number
-        const phoneRegex = /^\d{10}$/;
-        if (!formData.phone.match(phoneRegex)) {
-            errors.phone = 'Please enter a 10-digit phone number';
-        }
-
-        // Validate password
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-        if (!formData.password.match(passwordRegex)) {
-            errors.password = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character';
-        }
-
-        setErrors(errors);
-        return Object.keys(errors).length === 0; // Return true if there are no errors
+        setErrors(newErrors);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, checked, type } = e.target;
         setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
+        validateForm(name, type === 'checkbox' ? String(checked) : value);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (validateForm()) {
+        if (Object.values(errors).every(error => error === '') && Object.values(formData).every(field => field !== '')) {
+            setLoading(true);
             try {
                 const data = await registerUser(formData);
                 login(data.token);
                 navigate('/');
             } catch (error) {
                 alert(error);
+            } finally {
+                setLoading(false);
             }
         }
+    };
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -66,6 +77,7 @@ const RegisterPage: React.FC = () => {
                         fullWidth
                         margin="normal"
                         name="firstName"
+                        variant="standard"
                         value={formData.firstName}
                         onChange={handleChange}
                     />
@@ -73,6 +85,7 @@ const RegisterPage: React.FC = () => {
                         label="Last Name"
                         fullWidth
                         margin="normal"
+                        variant="standard"
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
@@ -81,6 +94,7 @@ const RegisterPage: React.FC = () => {
                         label="Email"
                         fullWidth
                         margin="normal"
+                        variant="standard"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
@@ -91,6 +105,7 @@ const RegisterPage: React.FC = () => {
                         label="Phone"
                         fullWidth
                         margin="normal"
+                        variant="standard"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
@@ -99,7 +114,8 @@ const RegisterPage: React.FC = () => {
                     />
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
+                        variant="standard"
                         fullWidth
                         margin="normal"
                         name="password"
@@ -107,6 +123,19 @@ const RegisterPage: React.FC = () => {
                         onChange={handleChange}
                         error={!!errors.password}
                         helperText={errors.password}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <FormControlLabel
                         control={
@@ -119,8 +148,8 @@ const RegisterPage: React.FC = () => {
                         label="I am a seller"
                     />
                     <Box mt={2}>
-                        <Button type="submit" variant="contained" color="primary" fullWidth>
-                            Register
+                        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+                            {loading ? <CircularProgress size={24} /> : 'Register'}
                         </Button>
                     </Box>
                 </form>
