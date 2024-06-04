@@ -6,8 +6,8 @@ Rentify is a web application designed to help owners find the correct tenants an
 
 ## Online Deployment Links
 
-- **Frontend**: [Rentify Frontend on Netlify](https://rentify-frontend-bkabhi.netlify.app)
 - **Backend**: [Rentify Backend on Render](https://rentify-backend-bkabhi.onrender.com)
+- **Frontend**: [Rentify Frontend on Netlify](https://rentify-frontend-bkabhi.netlify.app)
 
 ## Features
 
